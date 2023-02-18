@@ -3,6 +3,7 @@ import CartContext from "../../store/cart-context";
 import Modal from "../UI/Modal";
 import classes from "./Cart.module.css";
 import CartItem from "./CartItem";
+import makeOrder from "../../server/make-order";
 
 const Cart = (props) => {
   const cartCtx = useContext(CartContext);
@@ -32,6 +33,16 @@ const Cart = (props) => {
       ))}
     </ul>
   );
+
+  const orderPlaceHandler = () => {
+    const isSuccesful = makeOrder(cartCtx.items);
+    if (isSuccesful) {
+      props.onHideCart();
+      cartCtx.emptyCart();
+    } else {
+      alert("Something went wrong");
+    }
+  };
   const totalAmount = cartCtx.totalCost.toFixed(2);
   return (
     <Modal onBackdropClick={props.onHideCart}>
@@ -44,7 +55,11 @@ const Cart = (props) => {
         <button className={classes["button--alt"]} onClick={props.onHideCart}>
           Close
         </button>
-        <button className={classes.button}>Order</button>
+        {cartCtx.items.length !== 0 && (
+          <button className={classes.button} onClick={orderPlaceHandler}>
+            Order
+          </button>
+        )}
       </div>
     </Modal>
   );

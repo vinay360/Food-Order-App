@@ -31,6 +31,10 @@ const cartReducer = (state, action) => {
     }
     return newState;
   }
+
+  if (action.type === "EMPTY") {
+    return defaultState;
+  }
   return defaultState;
 };
 
@@ -48,6 +52,9 @@ const CartProvider = (props) => {
     },
     removeItem: (id) => {
       dispatcherCartState({ type: "REMOVE", value: id });
+    },
+    emptyCart: () => {
+      dispatcherCartState({ type: "EMPTY" });
     },
   };
   return (
